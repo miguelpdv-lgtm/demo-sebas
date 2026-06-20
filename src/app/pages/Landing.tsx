@@ -1,64 +1,39 @@
 import { Link } from "react-router";
 import { Box, Triangle, ArrowRight, Zap, Shield, Cpu, Code2, Terminal, ChevronRight, Server, Cloud, Database, Lock, Settings } from "lucide-react";
-import NodeAnimation from "../components/NodeAnimation";
-import RadialOrbitalTimeline, { TimelineItem } from "../components/RadialOrbitalTimeline";
+import AetherFlowHero from "../components/AetherFlowHero";
+import ScannerCardStream from "../components/ScannerCardStream";
 import CTAWaveCard from "../components/CTAWaveCard";
 
-const timelineData: TimelineItem[] = [
+const servicesData = [
   {
     id: 1,
     title: "Soluciones Integrales",
-    date: "01",
-    content: "Conectamos todo tipo de servicios para crear ecosistemas digitales completos y perfectamente sincronizados.",
-    category: "Integración",
-    icon: Cloud,
-    relatedIds: [2, 3],
-    status: "completed",
-    energy: 100,
+    description: "Conectamos todo tipo de servicios para crear ecosistemas digitales completos y perfectamente sincronizados.",
+    image: "https://images.unsplash.com/photo-1644088379091-d574269d422f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHRlY2hub2xvZ3klMjBuZXR3b3JrfGVufDF8fHx8MTc4MTk3MTU1OHww&ixlib=rb-4.1.0&q=80&w=1080",
   },
   {
     id: 2,
     title: "Software Personalizado",
-    date: "02",
-    content: "Construimos plataformas a la medida, adaptadas exactamente a las necesidades y objetivos de cada negocio.",
-    category: "Desarrollo",
-    icon: Code2,
-    relatedIds: [1, 5],
-    status: "completed",
-    energy: 90,
+    description: "Construimos plataformas a la medida, adaptadas exactamente a las necesidades y objetivos de cada negocio.",
+    image: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb2Z0d2FyZSUyMGNvZGUlMjBkZXZlbG9wbWVudHxlbnwxfHx8fDE3ODE5NzE1NTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
   },
   {
     id: 3,
     title: "Automatización",
-    date: "03",
-    content: "Automatizamos procesos y flujos de trabajo para diferentes tipos de negocios, maximizando la eficiencia operativa.",
-    category: "Optimización",
-    icon: Zap,
-    relatedIds: [1, 4],
-    status: "in-progress",
-    energy: 60,
+    description: "Automatizamos procesos y flujos de trabajo para diferentes tipos de negocios, maximizando la eficiencia operativa.",
+    image: "https://images.unsplash.com/photo-1759752393975-7ca7b302fcc6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGF1dG9tYXRpb24lMjB3b3JrZmxvd3xlbnwxfHx8fDE3ODE5NzE1NTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
   },
   {
     id: 4,
     title: "Agentes Digitales",
-    date: "04",
-    content: "Construimos e integramos agentes inteligentes que asisten, aprenden y escalan tus operaciones de forma automática.",
-    category: "Innovación",
-    icon: Cpu,
-    relatedIds: [3, 5],
-    status: "pending",
-    energy: 30,
+    description: "Construimos e integramos agentes inteligentes que asisten, aprenden y escalan tus operaciones de forma automática.",
+    image: "https://images.unsplash.com/photo-1674027444485-cec3da58eef4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlJTIwYnJhaW58ZW58MXx8fHwxNzgxOTcxNTU5fDA&ixlib=rb-4.1.0&q=80&w=1080",
   },
   {
     id: 5,
     title: "Consultoría de Software",
-    date: "05",
-    content: "Asesoramiento técnico experto para guiar la estrategia, arquitectura y toma de decisiones tecnológicas.",
-    category: "Estrategia",
-    icon: Settings,
-    relatedIds: [2, 4],
-    status: "pending",
-    energy: 80,
+    description: "Asesoramiento técnico experto para guiar la estrategia, arquitectura y toma de decisiones tecnológicas.",
+    image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25zdWx0aW5nJTIwc3RyYXRlZ3klMjBtZWV0aW5nfGVufDF8fHx8MTc4MTk3MTU1OXww&ixlib=rb-4.1.0&q=80&w=1080",
   },
 ];
 
@@ -107,70 +82,24 @@ export default function Landing() {
       {/* Main Content */}
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative pt-36 pb-24 md:pt-52 md:pb-36 overflow-hidden">
-          <NodeAnimation />
-          {/* Intense Vercel-like ambient glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-white/[0.04] rounded-full blur-[120px] pointer-events-none" />
-          
-          <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center text-center">
-            {/* Glowing pill badge */}
-            <div className="mb-8 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02] backdrop-blur-md shadow-[0_0_20px_rgba(255,255,255,0.05)]">
-              <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
-              <span className="text-xs font-medium text-neutral-300">Nueva Generación de Consultoría</span>
-            </div>
+        <AetherFlowHero />
 
-            <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] leading-[1.05] font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-neutral-200 to-neutral-600 mb-6 max-w-5xl drop-shadow-sm">
-              Construimos el software <br className="hidden md:block" /> que tu negocio necesita
-            </h1>
-            
-            <p className="text-lg md:text-xl text-neutral-400 max-w-2xl mb-10 leading-relaxed">
-              Consultoría de software de nueva generación. Conectamos tus herramientas, desarrollamos soluciones a medida y desplegamos automatizaciones y agentes para escalar tu empresa sin límites.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row items-center gap-4 mt-4">
-              <a 
-                href="#" 
-                className="group relative w-full sm:w-auto px-8 py-3.5 bg-white text-black text-base font-medium rounded-md transition-all hover:scale-[1.02] flex items-center justify-center gap-2 overflow-hidden shadow-[0_0_40px_rgba(255,255,255,0.15)]"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-white via-neutral-200 to-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                <span className="relative z-10 flex items-center gap-2">
-                  Agendar Consulta
-                  <Triangle className="w-3 h-3 fill-black rotate-90 transition-transform group-hover:translate-x-0.5" />
-                </span>
-              </a>
-              <a 
-                href="#soluciones" 
-                className="w-full sm:w-auto px-8 py-3.5 bg-transparent border border-white/10 text-white text-base font-medium rounded-md hover:bg-white/[0.03] transition-colors flex items-center justify-center gap-2 backdrop-blur-sm"
-              >
-                Ver Soluciones
-              </a>
+        {/* Que Hacemos Section (Scanner Stream Carousel) */}
+        <section id="soluciones" className="py-24 md:py-32 border-y border-white/5 bg-black relative z-10 overflow-hidden">
+          <div className="max-w-7xl mx-auto px-6 mb-16">
+            <div className="flex flex-col items-center text-center">
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 mb-6 drop-shadow-sm">
+                ¿Qué hacemos?
+              </h2>
+              <p className="text-lg text-neutral-400 max-w-xl leading-relaxed">
+                Explora nuestros servicios a través de este stream interactivo. 
+                Desliza las tarjetas para ver en detalle cómo operamos.
+              </p>
             </div>
           </div>
-        </section>
-
-        {/* Que Hacemos Section */}
-        <section id="soluciones" className="py-24 md:py-32 border-y border-white/5 bg-black relative z-10 overflow-hidden">
-          {/* Background Grid Pattern */}
-          <div 
-            className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none -z-10"
-            style={{ maskImage: 'radial-gradient(ellipse 80% 50% at 50% 50%, #000 30%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse 80% 50% at 50% 50%, #000 30%, transparent 100%)' }}
-          />
-          {/* Ambient Glow */}
-          <div className="absolute top-1/2 left-3/4 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/[0.03] rounded-full blur-[120px] pointer-events-none -z-10" />
           
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <div className="text-left">
-                <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 mb-6 drop-shadow-sm">¿Qué hacemos?</h2>
-                <p className="text-lg text-neutral-400 max-w-xl leading-relaxed">
-                  Explora nuestros servicios a través de esta plataforma orbital interactiva. 
-                  Conectamos todos los pilares de tu ecosistema para que funcionen en perfecta sincronía.
-                </p>
-              </div>
-              <div className="relative w-full overflow-visible">
-                <RadialOrbitalTimeline timelineData={timelineData} />
-              </div>
-            </div>
+          <div className="relative w-full">
+             <ScannerCardStream cards={servicesData} />
           </div>
         </section>
 
