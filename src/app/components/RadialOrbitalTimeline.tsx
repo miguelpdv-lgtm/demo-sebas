@@ -83,20 +83,31 @@ export default function RadialOrbitalTimeline({
   };
 
   useEffect(() => {
-    let rotationTimer: NodeJS.Timeout;
+    let animationFrameId: number;
+    let lastTime = performance.now();
 
-    if (autoRotate && viewMode === "orbital") {
-      rotationTimer = setInterval(() => {
+    const rotate = (time: number) => {
+      if (autoRotate && viewMode === "orbital") {
+        const deltaTime = time - lastTime;
+        // Adjust speed here: roughly 6 degrees per second
+        const angleChange = (deltaTime / 1000) * 6;
+        
         setRotationAngle((prev) => {
-          const newAngle = (prev + 0.3) % 360;
+          const newAngle = (prev + angleChange) % 360;
           return Number(newAngle.toFixed(3));
         });
-      }, 50);
+      }
+      lastTime = time;
+      animationFrameId = requestAnimationFrame(rotate);
+    };
+
+    if (autoRotate && viewMode === "orbital") {
+      animationFrameId = requestAnimationFrame(rotate);
     }
 
     return () => {
-      if (rotationTimer) {
-        clearInterval(rotationTimer);
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
       }
     };
   }, [autoRotate, viewMode]);
@@ -111,9 +122,19 @@ export default function RadialOrbitalTimeline({
     setRotationAngle(270 - targetAngle);
   };
 
+  const [radius, setRadius] = useState(200);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setRadius(window.innerWidth < 640 ? 120 : 200);
+    };
+    handleResize(); // init
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const calculateNodePosition = (index: number, total: number) => {
     const angle = ((index / total) * 360 + rotationAngle) % 360;
-    const radius = 200;
     const radian = (angle * Math.PI) / 180;
 
     const x = radius * Math.cos(radian) + centerOffset.x;
@@ -176,7 +197,10 @@ export default function RadialOrbitalTimeline({
             <div className="w-8 h-8 rounded-full bg-white/80 backdrop-blur-md"></div>
           </div>
 
-          <div className="absolute w-96 h-96 rounded-full border border-white/10"></div>
+          <div 
+            className="absolute rounded-full border border-white/10"
+            style={{ width: `${radius * 2}px`, height: `${radius * 2}px` }}
+          ></div>
 
           {timelineData.map((item, index) => {
             const position = calculateNodePosition(index, timelineData.length);
@@ -195,8 +219,11 @@ export default function RadialOrbitalTimeline({
               <div
                 key={item.id}
                 ref={(el) => (nodeRefs.current[item.id] = el)}
-                className="absolute transition-all duration-700 cursor-pointer"
-                style={nodeStyle}
+                className="absolute cursor-pointer"
+                style={{
+                  ...nodeStyle,
+                  transition: 'opacity 0.5s ease-in-out, z-index 0.5s', // Removed transform transition to fix lag during rotation
+                }}
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleItem(item.id);
