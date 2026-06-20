@@ -108,13 +108,22 @@ const AetherFlowHero = () => {
         const connect = () => {
             if (!canvas || !ctx) return;
             let opacityValue = 1;
+            
+            // For mobile screens, we need a larger connection distance threshold 
+            // since the canvas height/width ratio is different (taller than wider)
+            // making the canvas.width / 7 * canvas.height / 7 calculation too small for mobile
+            const isMobile = window.innerWidth < 768;
+            const distanceThreshold = isMobile 
+                ? (canvas.width / 3) * (canvas.height / 3) 
+                : (canvas.width / 7) * (canvas.height / 7);
+                
             for (let a = 0; a < particles.length; a++) {
                 for (let b = a; b < particles.length; b++) {
                     let distance = ((particles[a].x - particles[b].x) * (particles[a].x - particles[b].x))
                         + ((particles[a].y - particles[b].y) * (particles[a].y - particles[b].y));
                     
-                    if (distance < (canvas.width / 7) * (canvas.height / 7)) {
-                        opacityValue = 1 - (distance / 20000);
+                    if (distance < distanceThreshold) {
+                        opacityValue = 1 - (distance / (isMobile ? 30000 : 20000));
                         
                         let dx_mouse_a = mouse.x !== null ? particles[a].x - mouse.x : 0;
                         let dy_mouse_a = mouse.y !== null ? particles[a].y - mouse.y : 0;
@@ -157,13 +166,22 @@ const AetherFlowHero = () => {
             mouse.y = event.clientY - rect.top;
         };
         
+        const handleTouchMove = (event: TouchEvent) => {
+            if (!canvas || event.touches.length === 0) return;
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = event.touches[0].clientX - rect.left;
+            mouse.y = event.touches[0].clientY - rect.top;
+        };
+        
         const handleMouseOut = () => {
             mouse.x = null;
             mouse.y = null;
         };
 
         window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('touchmove', handleTouchMove, { passive: true });
         window.addEventListener('mouseout', handleMouseOut);
+        window.addEventListener('touchend', handleMouseOut);
 
         init();
         animate();
@@ -171,7 +189,9 @@ const AetherFlowHero = () => {
         return () => {
             window.removeEventListener('resize', resizeCanvas);
             window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('touchmove', handleTouchMove);
             window.removeEventListener('mouseout', handleMouseOut);
+            window.removeEventListener('touchend', handleMouseOut);
             cancelAnimationFrame(animationFrameId);
         };
     }, []);
